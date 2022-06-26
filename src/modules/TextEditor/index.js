@@ -23,8 +23,8 @@ const TextEditor = () => {
     t = v;
   };
   const getT = () => t;
-  const getQuillContent = () => {
-    quill.getContents();
+  const getQuillContent = async () => {
+    return await quill.getContents();
   };
 
   const saveDocIntervalHandler = () => {
