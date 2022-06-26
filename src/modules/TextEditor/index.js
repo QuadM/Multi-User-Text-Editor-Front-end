@@ -33,12 +33,14 @@ const TextEditor = () => {
       setClass("hidden");
       console.log("before interval");
       let saveInterval = setInterval(() => {
-        INTERVAL_IS_ON = false;
-        console.log("after interval");
-        socket.emit("save-doc", {
+        const obj = {
           title: getT(),
           quillContents: getQuillContent(),
-        });
+        };
+        INTERVAL_IS_ON = false;
+        console.log("after interval");
+        socket.emit("save-doc", obj);
+        console.log(obj);
         setClass("");
         clearInterval(saveInterval);
       }, SAVE_INTERVEL);
