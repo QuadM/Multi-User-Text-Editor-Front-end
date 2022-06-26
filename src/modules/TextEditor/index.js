@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Quill from "quill";
 import { io } from "socket.io-client";
 import "./style.css";
+import img from "./Loading_icon.gif";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
 // const HOST_URL = "http://localhost:3001";
@@ -62,7 +63,9 @@ const TextEditor = () => {
     const q = new Quill(editor, { theme: "snow" });
     const qEditor = document.getElementsByClassName("ql-editor")[0];
     const loadingImg = document.createElement("img");
-    loadingImg.setAttribute("src", "/Loading_icon.gif");
+    loadingImg.setAttribute("src", img);
+    let w = window.screen.width;
+    loadingImg.style = `transform:translateX(${w / 6}px)`;
     qEditor.append(loadingImg);
     q.disable();
     setQuill(q);
