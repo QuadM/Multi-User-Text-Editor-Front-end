@@ -6,7 +6,9 @@ import "./style.css";
 import img from "./Loading_icon.gif";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
+const PASIV_HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
 // const HOST_URL = "http://localhost:3001";
+// const PASIV_HOST_URL = "http://localhost:4000";
 
 const SAVE_INTERVEL = 3000;
 let INTERVAL_IS_ON = false;
@@ -15,12 +17,13 @@ const TextEditor = () => {
   const [title, setTitle] = useState();
   const [quill, setQuill] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [socketPasiv, setSocketPasiv] = useState(null);
   const [clientCount, setClientCount] = useState();
   const [savedClass, setClass] = useState();
   const { id: docID } = useParams();
 
   //------------------------------------------------------------------------------------------//
-  // //------------------------------------------------------------------------------------------//
+  //------------------------------------------------------------------------------------------//
 
   const getT = () => document.querySelector("#title").value;
   const getQuillContent = () => {
@@ -38,6 +41,7 @@ const TextEditor = () => {
         };
         INTERVAL_IS_ON = false;
         socket.emit("save-doc", obj);
+        socketPasiv.emit("save-doc", obj);
         console.log(obj);
         setClass("");
         clearInterval(saveInterval);
@@ -53,6 +57,12 @@ const TextEditor = () => {
         setClientCount(clientNo);
       });
   }, [socket]);
+  useEffect(() => {
+    socketPasiv &&
+      socketPasiv.on("client-number", (clientNo) => {
+        setClientCount(clientNo);
+      });
+  }, [socketPasiv]);
   //------------------------------------------------------------------------------------------//
 
   //------------------------------------------------------------------------------------------//
@@ -85,6 +95,11 @@ const TextEditor = () => {
           quillContents: quill.getContents(),
           delta,
         });
+        socketPasiv.emit("make-text-changes", {
+          docID,
+          quillContents: quill.getContents(),
+          delta,
+        });
         saveDocIntervalHandler();
       };
 
@@ -100,6 +115,7 @@ const TextEditor = () => {
   const handleTitleChange = (val) => {
     console.log("handle title change val :", val);
     socket.emit("make-title-changes", val);
+    socketPasiv.emit("make-title-changes", val);
     saveDocIntervalHandler();
   };
   //------------------------------------------------------------------------------------------//
@@ -111,9 +127,13 @@ const TextEditor = () => {
     socket.on("receive-text-changes", (delta) => {
       quill.updateContents(delta);
     });
+    socketPasiv.on("receive-text-changes", (delta) => {
+      quill.updateContents(delta);
+    });
 
     return () => {
       socket.off("receive-text-changes");
+      socketPasiv.off("receive-text-changes");
     };
   }, [socket, quill]);
 
@@ -123,9 +143,14 @@ const TextEditor = () => {
       setTitle(delta);
       console.log("receive title changes delta :", delta);
     });
+    socketPasiv.on("receive-title-changes", (delta) => {
+      setTitle(delta);
+      console.log("receive title changes delta :", delta);
+    });
 
     return () => {
       socket.off("receive-title-changes");
+      socketPasiv.off("receive-title-changes");
     };
   }, [socket, title]);
   //------------------------------------------------------------------------------------------//
@@ -135,8 +160,11 @@ const TextEditor = () => {
   useEffect(() => {
     const s = io(HOST_URL);
     setSocket(s);
+    const psv = io(PASIV_HOST_URL);
+    setSocketPasiv(psv);
     return () => {
       s.disconnect();
+      psv.disconnect();
     };
   }, []);
   //------------------------------------------------------------------------------------------//
@@ -150,16 +178,31 @@ const TextEditor = () => {
   //                    Opening a room for a single document using its ID                     //
   useEffect(() => {
     if (!socket || !quill) return;
-    socket.once("load-doc", ({ doc, clientno }) => {
-      console.log(doc);
-      setTitle(doc.title);
-      setClientCount(clientno);
-      quill.setContents(doc.quillContents);
-      quill.enable();
-    });
+    !clientCount &&
+      socket.once("load-doc", ({ doc, clientno }) => {
+        console.log(doc);
+        setTitle(doc.title);
+        setClientCount(clientno);
+        quill.setContents(doc.quillContents);
+        quill.enable();
+      });
 
     socket.emit("get-doc", docID);
-  }, [socket, quill, docID]);
+  }, [socket, quill, docID, clientCount]);
+
+  useEffect(() => {
+    if (!socketPasiv || !quill) return;
+    !clientCount &&
+      socketPasiv.once("load-doc", ({ doc, clientno }) => {
+        console.log(doc);
+        setTitle(doc.title);
+        setClientCount(clientno);
+        quill.setContents(doc.quillContents);
+        quill.enable();
+      });
+
+    socketPasiv.emit("get-doc", docID);
+  }, [socketPasiv, quill, docID, clientCount]);
   //------------------------------------------------------------------------------------------//
 
   return (
