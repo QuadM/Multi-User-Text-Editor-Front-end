@@ -10,10 +10,10 @@ const SAVE_INTERVEL = 3000;
 let INTERVAL_IS_ON = false;
 
 const TextEditor = () => {
-  const [title, setTitle] = useState("");
-  const [quill, setQuill] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [savedClass, setClass] = useState("");
+  const [title, setTitle] = useState();
+  const [quill, setQuill] = useState();
+  const [socket, setSocket] = useState();
+  const [savedClass, setClass] = useState();
   const { id: docID } = useParams();
 
   //------------------------------------------------------------------------------------------//
