@@ -13,6 +13,7 @@ const TextEditor = () => {
   const [title, setTitle] = useState();
   const [quill, setQuill] = useState(null);
   const [socket, setSocket] = useState(null);
+  const [clientCount, setClientCount] = useState();
   const [savedClass, setClass] = useState();
   const { id: docID } = useParams();
 
@@ -47,6 +48,15 @@ const TextEditor = () => {
       }, SAVE_INTERVEL);
     }
   };
+  //------------------------------------------------------------------------------------------//
+
+  //------------------------------------------------------------------------------------------//
+  useEffect(() => {
+    socket &&
+      socket.on("client-number", (clientNo) => {
+        setClientCount(clientNo);
+      });
+  }, [socket]);
   //------------------------------------------------------------------------------------------//
 
   //------------------------------------------------------------------------------------------//
@@ -168,6 +178,16 @@ const TextEditor = () => {
         className={savedClass}
       >
         Saved
+      </span>
+      <span
+        style={{
+          color: "white",
+          backgroundColor: "rgba(100,100,255,0.8)",
+          padding: "1px 0.5em 4px",
+          borderRadius: "20px",
+        }}
+      >
+        {clientCount}
       </span>
       <input
         type="text"
