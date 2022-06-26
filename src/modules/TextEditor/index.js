@@ -201,7 +201,7 @@ const TextEditor = () => {
         quill.enable();
       });
 
-    socketPasiv.emit("get-doc", docID);
+    !clientCount && socketPasiv.emit("get-doc", docID);
   }, [socketPasiv, quill, docID, clientCount]);
   //------------------------------------------------------------------------------------------//
 
