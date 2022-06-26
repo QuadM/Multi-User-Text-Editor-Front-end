@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { Navigate } from "react-router-dom";
+import img from "./Loading_icon.gif";
+
 const LoadingNew = () => {
   const [socket, setSocket] = useState();
   const [URI, setURI] = useState();
@@ -28,7 +30,7 @@ const LoadingNew = () => {
     <>
       <div style={{ background: "white", padding: "2em", margin: "auto" }}>
         <h1> Creating File </h1>
-        <img src="/Loading_icon.gif" alt="loading img" />
+        <img src={img} alt="loading img" />
       </div>
       {URI && <Navigate to={URI} />}
     </>

@@ -1,4 +1,5 @@
 import React from "react";
+import img from "./Add.svg";
 
 const NewFile = () => {
   const docURI = `/document/new`;
@@ -6,7 +7,7 @@ const NewFile = () => {
     <a href={docURI}>
       <div className="fileContainer filebox">
         <div className="fileimg">
-          <img src="add.svg" alt="fileimg" />
+          <img src={img} alt="fileimg" />
         </div>
         <p>New File</p>
       </div>

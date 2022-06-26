@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 import Menu from "./contextMenu/menu";
+import img from "./stories-icon.svg";
 import "./style.css";
 
 const FileBox = ({ file, handleDelete, handleRename }) => {
@@ -10,7 +11,7 @@ const FileBox = ({ file, handleDelete, handleRename }) => {
     <div ref={fileref}>
       <a className="fileContainer filebox" href={docURI}>
         <div className="fileimg">
-          <img src="stories-icon.svg" alt="fileimg" />
+          <img src={img} alt="fileimg" />
         </div>
         <p>
           {file.title.length > 10
