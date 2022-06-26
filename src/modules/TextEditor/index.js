@@ -23,7 +23,7 @@ const TextEditor = () => {
   // const setT = (v) => {
   //   t = v;
   // };
-  const getT = () => title;
+  const getT = () => document.querySelector("#title").value;
   const getQuillContent = () => {
     return quill.getContents();
   };
