@@ -5,6 +5,7 @@ import { io } from "socket.io-client";
 import "./style.css";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
+// const HOST_URL = "http://localhost:3001";
 
 const SAVE_INTERVEL = 3000;
 let INTERVAL_IS_ON = false;
@@ -19,11 +20,7 @@ const TextEditor = () => {
 
   //------------------------------------------------------------------------------------------//
   // //------------------------------------------------------------------------------------------//
-  // let t; // for capturing non-delayed/recent title
 
-  // const setT = (v) => {
-  //   t = v;
-  // };
   const getT = () => document.querySelector("#title").value;
   const getQuillContent = () => {
     return quill.getContents();
@@ -33,14 +30,12 @@ const TextEditor = () => {
     if (!INTERVAL_IS_ON) {
       INTERVAL_IS_ON = true;
       setClass("hidden");
-      console.log("before interval");
       let saveInterval = setInterval(() => {
         const obj = {
           title: getT(),
           quillContents: getQuillContent(),
         };
         INTERVAL_IS_ON = false;
-        console.log("after interval");
         socket.emit("save-doc", obj);
         console.log(obj);
         setClass("");
@@ -102,9 +97,7 @@ const TextEditor = () => {
   const handleTitleChange = (val) => {
     console.log("handle title change val :", val);
     socket.emit("make-title-changes", val);
-    saveDocIntervalHandler({
-      quillContents: quill.getContents(),
-    });
+    saveDocIntervalHandler();
   };
   //------------------------------------------------------------------------------------------//
 
@@ -115,6 +108,7 @@ const TextEditor = () => {
     socket.on("receive-text-changes", (delta) => {
       quill.updateContents(delta);
     });
+
     return () => {
       socket.off("receive-text-changes");
     };
@@ -126,6 +120,7 @@ const TextEditor = () => {
       setTitle(delta);
       console.log("receive title changes delta :", delta);
     });
+
     return () => {
       socket.off("receive-title-changes");
     };
@@ -145,23 +140,21 @@ const TextEditor = () => {
 
   //------------------------------------------------------------------------------------------//
   //                          Auto save after interval (2000 ms)                              //
-  useEffect(() => {
-    if (!socket || !quill) return;
-    console.log("in interval");
-  }, [quill, socket]);
+
   //------------------------------------------------------------------------------------------//
 
   //------------------------------------------------------------------------------------------//
   //                    Opening a room for a single document using its ID                     //
   useEffect(() => {
     if (!socket || !quill) return;
-    socket.once("load-doc", (doc) => {
+    socket.once("load-doc", ({ doc, clientno }) => {
       console.log(doc);
       setTitle(doc.title);
-      console.log("load file title :", doc.title);
+      setClientCount(clientno);
       quill.setContents(doc.quillContents);
       quill.enable();
     });
+
     socket.emit("get-doc", docID);
   }, [socket, quill, docID]);
   //------------------------------------------------------------------------------------------//
@@ -174,6 +167,7 @@ const TextEditor = () => {
           backgroundColor: "rgba(100,100,255,0.8)",
           padding: "1px 0.5em 4px",
           borderRadius: "20px",
+          float: "left",
         }}
         className={savedClass}
       >
@@ -181,13 +175,14 @@ const TextEditor = () => {
       </span>
       <span
         style={{
+          float: "right",
           color: "white",
-          backgroundColor: "rgba(100,100,255,0.8)",
+          backgroundColor: "rgba(255,100,100,0.8)",
           padding: "1px 0.5em 4px",
           borderRadius: "20px",
         }}
       >
-        {clientCount}
+        {clientCount} Online
       </span>
       <input
         type="text"
@@ -195,7 +190,6 @@ const TextEditor = () => {
         value={title}
         id="title"
         onChange={(e) => {
-          console.log("inside component", e.target.value);
           handleTitleChange(e.target.value);
           setTitle(e.target.value);
         }}
