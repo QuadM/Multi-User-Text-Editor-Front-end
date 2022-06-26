@@ -23,8 +23,11 @@ const TextEditor = () => {
     t = v;
   };
   const getT = () => t;
+  const getQuillContent = () => {
+    quill.getContents();
+  };
 
-  const saveDocIntervalHandler = (quillContents) => {
+  const saveDocIntervalHandler = () => {
     if (!INTERVAL_IS_ON) {
       INTERVAL_IS_ON = true;
       setClass("hidden");
@@ -32,7 +35,10 @@ const TextEditor = () => {
       let saveInterval = setInterval(() => {
         INTERVAL_IS_ON = false;
         console.log("after interval");
-        socket.emit("save-doc", { title: getT(), quillContents });
+        socket.emit("save-doc", {
+          title: getT(),
+          quillContents: getQuillContent(),
+        });
         setClass("");
         clearInterval(saveInterval);
       }, SAVE_INTERVEL);
@@ -68,7 +74,7 @@ const TextEditor = () => {
           quillContents: quill.getContents(),
           delta,
         });
-        saveDocIntervalHandler(quill.getContents());
+        saveDocIntervalHandler();
       };
 
       quill.on("text-change", changeHandler);
