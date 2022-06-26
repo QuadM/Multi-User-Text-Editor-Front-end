@@ -3,10 +3,8 @@ import { io } from "socket.io-client";
 import { Navigate } from "react-router-dom";
 import img from "./Loading_icon.gif";
 
-const HOST_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://quadm-text-editor-backend.herokuapp.com/"
-    : "http://localhost:3001";
+const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
+
 
 const LoadingNew = () => {
   const [socket, setSocket] = useState();

@@ -4,10 +4,8 @@ import Quill from "quill";
 import { io } from "socket.io-client";
 import "./style.css";
 
-const HOST_URL =
-  process.env.NODE_ENV === "production"
-    ? "https://quadm-text-editor-backend.herokuapp.com/"
-    : "http://localhost:3001";
+const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/"
+
 const SAVE_INTERVEL = 3000;
 let INTERVAL_IS_ON = false;
 
