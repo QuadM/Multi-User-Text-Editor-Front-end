@@ -176,10 +176,12 @@ const TextEditor = () => {
 
   //------------------------------------------------------------------------------------------//
   //                    Opening a room for a single document using its ID                     //
+  let count;
   useEffect(() => {
-    if (!socket || !quill) return;
+    if (!socket || !quill || clientCount || count) return;
     !clientCount &&
       socket.once("load-doc", ({ doc, clientno }) => {
+        count = clientno;
         console.log(doc);
         setTitle(doc.title);
         setClientCount(clientno);
@@ -191,17 +193,18 @@ const TextEditor = () => {
   }, [socket, quill, docID, clientCount]);
 
   useEffect(() => {
-    if (!socketPasiv || !quill) return;
-    !clientCount &&
-      socketPasiv.once("load-doc", ({ doc, clientno }) => {
-        console.log(doc);
-        setTitle(doc.title);
-        setClientCount(clientno);
-        quill.setContents(doc.quillContents);
-        quill.enable();
-      });
+    if (!socketPasiv || !quill || clientCount || count) return;
 
-    !clientCount && socketPasiv.emit("get-doc", docID);
+    socketPasiv.once("load-doc", ({ doc, clientno }) => {
+      count = clientno;
+      console.log(doc);
+      setTitle(doc.title);
+      setClientCount(clientno);
+      quill.setContents(doc.quillContents);
+      quill.enable();
+    });
+
+    socketPasiv.emit("get-doc", docID);
   }, [socketPasiv, quill, docID, clientCount]);
   //------------------------------------------------------------------------------------------//
 
