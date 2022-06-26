@@ -193,18 +193,19 @@ const TextEditor = () => {
   }, [socket, quill, docID, clientCount]);
 
   useEffect(() => {
-    if (!socketPasiv || !quill || clientCount || count) return;
+    setInterval(() => {
+      if (!socketPasiv || !quill || clientCount || count) return;
+      socketPasiv.once("load-doc", ({ doc, clientno }) => {
+        count = clientno;
+        console.log(doc);
+        setTitle(doc.title);
+        setClientCount(clientno);
+        quill.setContents(doc.quillContents);
+        quill.enable();
+      });
 
-    socketPasiv.once("load-doc", ({ doc, clientno }) => {
-      count = clientno;
-      console.log(doc);
-      setTitle(doc.title);
-      setClientCount(clientno);
-      quill.setContents(doc.quillContents);
-      quill.enable();
-    });
-
-    socketPasiv.emit("get-doc", docID);
+      socketPasiv.emit("get-doc", docID);
+    }, 2000);
   }, [socketPasiv, quill, docID, clientCount]);
   //------------------------------------------------------------------------------------------//
 
