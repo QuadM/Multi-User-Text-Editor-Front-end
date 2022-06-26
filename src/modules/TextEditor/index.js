@@ -20,10 +20,10 @@ const TextEditor = () => {
   //------------------------------------------------------------------------------------------//
   let t; // for capturing non-delayed/recent title
   const titleRef = useRef();
-  useEffect(()=>{
-    setT(titleRef.current.value)
-    setTitle(titleRef.current.value)
-  },[titleRef])
+  useEffect(() => {
+    setT(document.getElementById("title").value);
+    setTitle(titleRef.current.value);
+  }, [title, titleRef]);
   const setT = (v) => {
     t = v;
   };
@@ -178,7 +178,8 @@ const TextEditor = () => {
         type="text"
         className="title"
         value={title}
-        ref = {titleRef}
+        ref={titleRef}
+        id="title"
         onChange={(e) => {
           console.log("inside component", e.target.value);
           handleTitleChange(e.target.value);
