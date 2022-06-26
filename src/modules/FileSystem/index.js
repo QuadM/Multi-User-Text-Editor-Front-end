@@ -5,7 +5,7 @@ import NewFile from "./NewFile.js";
 import { io } from "socket.io-client";
 
 const HOST_URL =
-  process.env.NOD_ENV === "production"
+  process.env.NODE_ENV === "production"
     ? "https://quadm-text-editor-backend.herokuapp.com/"
     : "http://localhost:3001";
 
