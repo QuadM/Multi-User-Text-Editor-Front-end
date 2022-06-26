@@ -4,6 +4,11 @@ import FileBox from "./FileBox.js";
 import NewFile from "./NewFile.js";
 import { io } from "socket.io-client";
 
+const HOST_URL =
+  process.env.NOD_ENV === "production"
+    ? "https://quadm-text-editor-backend.herokuapp.com/"
+    : "http://localhost:3001";
+
 const MyFileSystem = () => {
   const [files, setFiles] = useState([]);
   const [socket, setSocket] = useState();
@@ -15,7 +20,7 @@ const MyFileSystem = () => {
   };
 
   useEffect(() => {
-    const s = io("http://localhost:3001");
+    const s = io(HOST_URL);
     setSocket(s);
     s.emit("get-all-docs");
   }, []);

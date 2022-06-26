@@ -3,12 +3,17 @@ import { io } from "socket.io-client";
 import { Navigate } from "react-router-dom";
 import img from "./Loading_icon.gif";
 
+const HOST_URL =
+  process.env.NOD_ENV === "production"
+    ? "https://quadm-text-editor-backend.herokuapp.com/"
+    : "http://localhost:3001";
+
 const LoadingNew = () => {
   const [socket, setSocket] = useState();
   const [URI, setURI] = useState();
 
   useEffect(() => {
-    let s = io("http://localhost:3001");
+    let s = io(HOST_URL);
     setSocket(s);
     s &&
       s.on("created-new-doc", (d) => {
