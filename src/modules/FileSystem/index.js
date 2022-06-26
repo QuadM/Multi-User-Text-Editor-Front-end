@@ -26,6 +26,7 @@ const MyFileSystem = () => {
     socket &&
       socket.on("recieve-all-docs", (files) => {
         setFiles(files);
+        console.log(files);
       });
   }, [socket, files]);
 
