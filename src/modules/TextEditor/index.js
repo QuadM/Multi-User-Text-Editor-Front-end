@@ -11,8 +11,8 @@ let INTERVAL_IS_ON = false;
 
 const TextEditor = () => {
   const [title, setTitle] = useState();
-  const [quill, setQuill] = useState();
-  const [socket, setSocket] = useState();
+  const [quill, setQuill] = useState(null);
+  const [socket, setSocket] = useState(null);
   const [savedClass, setClass] = useState();
   const { id: docID } = useParams();
 
@@ -90,7 +90,6 @@ const TextEditor = () => {
   //-----------------------//
 
   const handleTitleChange = (val) => {
-    setTitle(val);
     console.log("handle title change val :", val);
     socket.emit("make-title-changes", val);
     saveDocIntervalHandler({
