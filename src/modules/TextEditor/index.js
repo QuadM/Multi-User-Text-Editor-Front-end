@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Quill from "quill";
 import { io } from "socket.io-client";
@@ -19,6 +19,11 @@ const TextEditor = () => {
   //------------------------------------------------------------------------------------------//
   //------------------------------------------------------------------------------------------//
   let t; // for capturing non-delayed/recent title
+  const titleRef = useRef();
+  useEffect(()=>{
+    setT(titleRef.current.value)
+    setTitle(titleRef.current.value)
+  },[titleRef])
   const setT = (v) => {
     t = v;
   };
@@ -173,11 +178,11 @@ const TextEditor = () => {
         type="text"
         className="title"
         value={title}
+        ref = {titleRef}
         onChange={(e) => {
           console.log("inside component", e.target.value);
           handleTitleChange(e.target.value);
           setTitle(e.target.value);
-          setT(e.target.value);
         }}
       />
       <div ref={wrapperRef}></div>
