@@ -4,10 +4,10 @@ import FileBox from "./FileBox.js";
 import NewFile from "./NewFile.js";
 import { io } from "socket.io-client";
 
-// const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
+ const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
 // const HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
-const HOST_URL = "http://localhost:3001";
-const PASIV_HOST_URL = "http://localhost:4000";
+//const HOST_URL = "http://localhost:3001";
+//const PASIV_HOST_URL = "http://localhost:4000";
 
 const MyFileSystem = () => {
   const [files, setFiles] = useState([]);
