@@ -11,6 +11,7 @@ const PASIV_HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
 
 const MyFileSystem = () => {
   const [files, setFiles] = useState([]);
+  const [filesCount,setFilesCount] = useState();
   const [socket, setSocket] = useState();
   const [socketPasiv, setSocketPasiv] = useState();
 
@@ -24,7 +25,7 @@ const MyFileSystem = () => {
         if(fileCount === files.length)
           socketPasiv.emit("delete-doc", file._id)
         clearInterval(interval)
-      }, 8000);
+      }, 5000);
     } else return;
   };
 
@@ -44,9 +45,10 @@ const MyFileSystem = () => {
         fils = f;
         console.log(f);
         setFiles(f);
+        setFilesCount(f.length)
       });
 
-    if (!fils)
+    if (!fils || files)
       socketPasiv &&
         socketPasiv.on("recieve-all-docs", (f) => {
           console.log(f);
