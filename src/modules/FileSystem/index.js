@@ -20,7 +20,11 @@ const MyFileSystem = () => {
       const fileCount = files.length
       socket.emit("delete-doc", file._id);
       const interval = setInterval(()=>
-      if(fileCount === files.length) socketPasiv.emit("delete-doc", file._id);, 8000);
+                                   {
+        if(fileCount === files.length)
+          socketPasiv.emit("delete-doc", file._id)
+        clearInterval(interval)
+      }, 8000);
     } else return;
   };
 
