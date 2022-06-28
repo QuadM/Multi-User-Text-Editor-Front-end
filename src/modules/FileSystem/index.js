@@ -17,8 +17,10 @@ const MyFileSystem = () => {
   const handleDelete = (file) => {
     if (window.confirm(`Are you sure to delete ${file.title} document?`)) {
       console.log("successfully deleted document, id: ", file._id);
-      setFiles(files.filter((f) => f._id !== file._id));
+      const fileCount = files.length
       socket.emit("delete-doc", file._id);
+      const interval = setInterval(()=>
+      if(fileCount === files.length) socketPasiv.emit("delete-doc", file._id);, 8000);
     } else return;
   };
 
