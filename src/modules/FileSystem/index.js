@@ -3,6 +3,8 @@ import "./style.css";
 import FileBox from "./FileBox.js";
 import NewFile from "./NewFile.js";
 import { io } from "socket.io-client";
+import LoadingNew from "./../loading/LoadingNew";
+import { Link } from "react-router-dom";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
 const PASIV_HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
@@ -10,9 +12,10 @@ const PASIV_HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
 // const PASIV_HOST_URL = "http://localhost:4000";
 
 const MyFileSystem = () => {
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState();
   const [socket, setSocket] = useState();
   const [socketPasiv, setSocketPasiv] = useState();
+  const URI = "/document/new";
 
   const handleDelete = (file) => {
     if (window.confirm(`Are you sure to delete ${file.title} document?`)) {
@@ -35,7 +38,8 @@ const MyFileSystem = () => {
     let fils;
     socket &&
       socket.on("recieve-all-docs", (f) => {
-        fils = f;
+        console.log("here in active");
+        fils = true;
         console.log(f);
         setFiles(f);
       });
@@ -59,11 +63,19 @@ const MyFileSystem = () => {
 
   return (
     <div className="fileSystem">
-      {files &&
-        files.map((f) => (
-          <FileBox file={f} key={f._id} handleDelete={() => handleDelete(f)} />
-        ))}
-      {<NewFile />}
+      <>
+        {files &&
+          files.map((f) => (
+            <FileBox
+              file={f}
+              key={f._id}
+              handleDelete={() => handleDelete(f)}
+            />
+          ))}
+        <Link to={URI}>
+          <NewFile />
+        </Link>
+      </>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import img from "./Loading_icon.gif";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
@@ -13,7 +13,7 @@ const LoadingNew = () => {
   const [socket, setSocket] = useState();
   const [socketPasiv, setSocketPasiv] = useState();
   const [URI, setURI] = useState();
-
+  const navigate = useNavigate();
   useEffect(() => {
     let s = io(HOST_URL);
     setSocket(s);
@@ -31,11 +31,14 @@ const LoadingNew = () => {
 
   useEffect(() => {
     socket && socket.emit("create-new-doc");
-    setInterval(() => {
+    const interval = setInterval(() => {
       setFlag(true);
-      console.log("interval 5ls");
+      console.log("interval 5ls w flag b :", Flag);
+      clearInterval(interval);
     }, 5000);
   }, [socket]);
+
+  useEffect(() => URI && navigate(URI, { replace: true }), [URI]);
 
   useEffect(() => {
     console.log("interval 5ls w flag b :", Flag);
@@ -48,7 +51,6 @@ const LoadingNew = () => {
         <h1> Creating File </h1>
         <img src={img} alt="loading img" />
       </div>
-      {URI && <Navigate to={URI} />}
     </>
   );
 };

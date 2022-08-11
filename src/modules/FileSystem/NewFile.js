@@ -2,16 +2,14 @@ import React from "react";
 import img from "./Add.svg";
 
 const NewFile = () => {
-  const docURI = `/document/new`;
+  // const docURI = `/document/new`;
   return (
-    <a href={docURI}>
-      <div className="fileContainer filebox">
-        <div className="fileimg">
-          <img src={img} alt="fileimg" />
-        </div>
-        <p>New File</p>
+    <div className="fileContainer filebox" style={{ cursor: "pointer" }}>
+      <div className="fileimg">
+        <img src={img} alt="fileimg" />
       </div>
-    </a>
+      <p>New File</p>
+    </div>
   );
 };
 

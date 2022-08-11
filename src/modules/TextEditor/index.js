@@ -14,16 +14,39 @@ const SAVE_INTERVEL = 3000;
 let INTERVAL_IS_ON = false;
 
 const TextEditor = () => {
-  const [title, setTitle] = useState();
+  const [title, setTitle] = useState("");
   const [quill, setQuill] = useState(null);
   const [socket, setSocket] = useState(null);
   const [socketPasiv, setSocketPasiv] = useState(null);
-  const [clientCount, setClientCount] = useState();
-  const [savedClass, setClass] = useState();
+  const [clientCount, setClientCount] = useState(0);
+  const [savedClass, setClass] = useState("");
   const { id: docID } = useParams();
 
   //------------------------------------------------------------------------------------------//
   //------------------------------------------------------------------------------------------//
+
+  const htmlElement = document.querySelector("html");
+
+  useEffect(() => {
+    htmlElement.scrollTop = 0;
+    const onScroll = () => {
+      const stky = document.querySelector(".stky");
+      let r = htmlElement.scrollTop / htmlElement.scrollHeight;
+      let w = r * (window.innerWidth + window.innerHeight) + "px";
+      stky.style.minWidth = w;
+      stky.style.backgroundColor = `rgba(221,121,192,${r + 0.5})`;
+      console.log(
+        "lol",
+        htmlElement.style.backgroundColor,
+        htmlElement.scrollTop,
+        htmlElement.scrollHeight,
+        w,
+        stky
+      );
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [htmlElement]);
 
   const getT = () => document.querySelector("#title").value;
   const getQuillContent = () => {
@@ -68,17 +91,31 @@ const TextEditor = () => {
   //------------------------------------------------------------------------------------------//
   //                making a quill object and append it to a div using ref                    //
   const wrapperRef = useCallback((wrapper) => {
+    const progrss = document.createElement("div");
+
     const editor = document.createElement("div");
-    wrapper.appendChild(editor);
-    const q = new Quill(editor, { theme: "snow" });
-    const qEditor = document.getElementsByClassName("ql-editor")[0];
-    const loadingImg = document.createElement("img");
-    loadingImg.setAttribute("src", img);
-    let w = window.screen.width;
-    loadingImg.style = `transform:translateX(${w / 6}px)`;
-    qEditor.append(loadingImg);
-    q.disable();
-    setQuill(q);
+    if (wrapper) {
+      wrapper.appendChild(editor);
+      document.querySelector("body").style.overflow = "visible";
+      document.querySelector("body").appendChild(progrss);
+
+      progrss.style.position = "fixed";
+      progrss.className = "stky";
+      progrss.style.zIndex = 3;
+      progrss.style.top = "0px";
+      progrss.style.left = "0px";
+      progrss.style.height = "5px";
+
+      const q = new Quill(editor, { theme: "snow" });
+      const qEditor = document.getElementsByClassName("ql-editor")[0];
+      const loadingImg = document.createElement("img");
+      loadingImg.setAttribute("src", img);
+      let w = window.screen.width;
+      loadingImg.style = `width:100%;`;
+      qEditor.append(loadingImg);
+      q.disable();
+      setQuill(q);
+    }
   }, []);
   //------------------------------------------------------------------------------------------//
 
@@ -203,14 +240,13 @@ const TextEditor = () => {
         quill.setContents(doc.quillContents);
         quill.enable();
       });
-
       socketPasiv.emit("get-doc", docID);
     }, 2000);
   }, [socketPasiv, quill, docID, clientCount]);
   //------------------------------------------------------------------------------------------//
 
   return (
-    <>
+    <div style={{ overflow: "visible" }}>
       <span
         style={{
           color: "white",
@@ -218,6 +254,8 @@ const TextEditor = () => {
           padding: "1px 0.5em 4px",
           borderRadius: "20px",
           float: "left",
+          position: "sticky",
+          top: "20px",
         }}
         className={savedClass}
       >
@@ -225,11 +263,13 @@ const TextEditor = () => {
       </span>
       <span
         style={{
+          position: "sticky",
           float: "right",
           color: "white",
           backgroundColor: "rgba(255,100,100,0.8)",
           padding: "1px 0.5em 4px",
           borderRadius: "20px",
+          top: "20px",
         }}
       >
         {clientCount} Online
@@ -245,7 +285,7 @@ const TextEditor = () => {
         }}
       />
       <div ref={wrapperRef}></div>
-    </>
+    </div>
   );
 };
 

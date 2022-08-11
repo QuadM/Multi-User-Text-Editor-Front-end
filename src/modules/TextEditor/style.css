@@ -22,6 +22,11 @@ html{
 .hidden{
   visibility: hidden;
 }
+.stky{
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+}
 .ql-container{
   margin: 2em;
   border: none;
@@ -70,3 +75,4 @@ html{
     opacity: 100%;
     outline: none;
   }
+  
