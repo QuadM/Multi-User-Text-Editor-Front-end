@@ -10,9 +10,9 @@
     "quill": "^1.3.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-google-login": "^5.1.3",
+    "react-google-login": "^5.2.2",
     "react-router-dom": "^6.3.0",
-    "react-scripts": "^2.1.3",
+    "react-scripts": "^5.0.1",
     "socket.io-client": "^4.5.1",
     "web-vitals": "^2.1.4"
   },
