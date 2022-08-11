@@ -110,7 +110,7 @@ const TextEditor = () => {
       const qEditor = document.getElementsByClassName("ql-editor")[0];
       const loadingImg = document.createElement("img");
       loadingImg.setAttribute("src", img);
-      let w = window.screen.width;
+
       loadingImg.style = `width:100%;`;
       qEditor.append(loadingImg);
       q.disable();

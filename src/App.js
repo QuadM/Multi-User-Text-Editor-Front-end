@@ -1,6 +1,6 @@
 import "quill/dist/quill.snow.css";
 import "./App.css";
-import React, { useEffect } from "react";
+import React from "react";
 // import { gapi } from "gapi-script";
 // import GoogleLogin , GoogleLogout from "react-google-login";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
