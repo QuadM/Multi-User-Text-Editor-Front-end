@@ -4,7 +4,6 @@ import FileBox from "./FileBox.js";
 import NewFile from "./NewFile.js";
 import { io } from "socket.io-client";
 import { Link } from "react-router-dom";
-// import LoadingNew from "./../loading/LoadingNew";
 
 const HOST_URL = "https://quadm-text-editor-backend.herokuapp.com/";
 const PASIV_HOST_URL = "https://quadm-text-editor-backend-1.herokuapp.com/";
